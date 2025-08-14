@@ -13,10 +13,16 @@ const expenseRoutes = require('./routes/expenseRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const authRoutes = require('./routes/authRoutes');
 const homeRoutes = require('./routes/homeRoutes');
+const academicRoutes = require('./routes/academicRoutes');
+const documentRoutes = require('./routes/documentRoutes');
+
 
 app.use('/tasks', taskRoutes);
 app.use('/expenses', expenseRoutes);
 app.use('/notifications', notificationRoutes);
+app.use('/academics', academicRoutes);
+app.use('/documents', documentRoutes);
+
 app.use( authRoutes);
 app.use(homeRoutes);
 
