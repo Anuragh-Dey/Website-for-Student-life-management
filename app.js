@@ -31,6 +31,9 @@ const authRoutes = require('./routes/authRoutes');
 const homeRoutes = require('./routes/homeRoutes');
 const academicRoutes = require('./routes/academicRoutes');
 const documentRoutes = require('./routes/documentRoutes');
+const emergencyRoutes = require('./routes/emergencyRoutes');
+const splitRoutes = require('./routes/splitRoutes');
+const mealRoutes = require('./routes/mealRoutes');
 
 const auth = require('./middleware/auth');
 
@@ -41,6 +44,9 @@ app.use('/academics', academicRoutes);
 app.use('/documents', documentRoutes);
 app.use('/auth', authRoutes);
 app.use('/', homeRoutes);
+app.use('/emergency-fund', emergencyRoutes);
+app.use('/split', splitRoutes);
+app.use('/meals', mealRoutes);
 
 app.post('/test', (req, res) => {
   console.log(req.body);
