@@ -1,17 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const documentController = require('../controllers/documentController');
+const expenseController = require('../controllers/expenseController');
 
-// Add a new document/video link
-router.post('/', documentController.addDocument);
+// Get all expenses
+router.get('/', expenseController.getExpenses);
 
-// Get all documents for a course
-router.get('/:course', documentController.getDocuments);
+// Get one expense by ID
+router.get('/:id', expenseController.getExpenseById);
 
-// Get all documents for a course and category
-router.get('/:course/:category', documentController.getDocuments);
+// Add new expense
+router.post('/', expenseController.addExpense);
 
-// Delete a document
-router.delete('/:id', documentController.deleteDocument);
+// Update expense by ID
+router.put('/:id', expenseController.updateExpense);
+
+// Delete expense by ID
+router.delete('/:id', expenseController.deleteExpense);
 
 module.exports = router;
