@@ -11,11 +11,11 @@ router.post('/groups/:groupId/items', ctrl.addItem);
 router.get('/groups/:groupId/items', ctrl.listItems);
 router.patch('/groups/:groupId/items/:itemId/purchase', ctrl.purchaseItem);
 
-// shopping duty (bazar duty)
+// shopping duty 
 router.post('/groups/:groupId/duties', ctrl.assignDuties);
 router.get('/groups/:groupId/duties', ctrl.listDuties);
 
-// meals (consumption)
+// meals
 router.post('/groups/:groupId/meals', ctrl.recordMeals);
 router.get('/groups/:groupId/meals', ctrl.listMeals);
 

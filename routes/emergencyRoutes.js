@@ -2,7 +2,7 @@ const router = require('express').Router();
 const ctrl = require('../controllers/emergencyController');
 
 
-router.post('/setup', ctrl.setup);                 // { method: "amount"|"months", ... }
+router.post('/setup', ctrl.setup);              
 router.get('/summary', ctrl.getSummary);
 router.post('/contributions', ctrl.addContribution);
 router.post('/withdraw', ctrl.withdraw);

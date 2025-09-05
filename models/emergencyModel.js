@@ -5,14 +5,13 @@ const EmergencyFundSchema = new mongoose.Schema({
 
   // Goal
   targetAmount: { type: Number, min: 0, default: 0 },
-  targetMonths: { type: Number, min: 0, default: 0 }, // 3–6 typical
+  targetMonths: { type: Number, min: 0, default: 0 },
   targetDate:   { type: Date, default: null },
 
   // Current state
   currentBalance: { type: Number, min: 0, default: 0 },
-  monthlyPlan:    { type: Number, min: 0, default: 0 }, // suggested monthly contribution
+  monthlyPlan:    { type: Number, min: 0, default: 0 }, 
 
-  // Gamification
   badges: [{
     type: String,
     enum: ['10%', '25%', '50%', '75%', '100%', '3mo', '6mo', '12mo', 'Streak3', 'Streak6', 'Streak12']

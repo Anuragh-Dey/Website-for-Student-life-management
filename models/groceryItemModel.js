@@ -7,7 +7,7 @@ const GroceryItemSchema = new mongoose.Schema({
   quantity: { type: Number, default: 1 },
   unit:     { type: String, trim: true }, // e.g., kg, pcs
 
-  neededForDate: { type: Date },          // optional (for planning)
+  neededForDate: { type: Date },          
   neededForMeal: { type: String, enum: ['breakfast','lunch','dinner','other', null], default: null },
 
   purchased:     { type: Boolean, default: false },

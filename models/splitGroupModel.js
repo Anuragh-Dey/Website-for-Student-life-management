@@ -14,23 +14,18 @@ const SplitGroupSchema = new mongoose.Schema({
   members:   { type: [MemberSchema], default: [] },
 }, { timestamps: true });
 
-/** Indexes */
-SplitGroupSchema.index({ 'members.email': 1 });
-/* Optional: enforce unique group names per creator (uncomment if you want this)
-SplitGroupSchema.index({ name: 1, createdBy: 1 }, { unique: true });
-*/
 
-/** Normalize members on save (lowercase emails, trim, and ensure at least one admin) */
+SplitGroupSchema.index({ 'members.email': 1 });
+
 SplitGroupSchema.pre('save', function(next) {
   if (!Array.isArray(this.members)) this.members = [];
 
-  // normalize emails + dedupe within the group
   const seen = new Set();
   const normalized = [];
   for (const m of this.members) {
     if (!m || !m.email) continue;
     const email = String(m.email).toLowerCase().trim();
-    if (seen.has(email)) continue; // drop duplicates
+    if (seen.has(email)) continue;
     seen.add(email);
     normalized.push({
       user: m.user,
@@ -42,9 +37,7 @@ SplitGroupSchema.pre('save', function(next) {
   }
   this.members = normalized;
 
-  // must have at least one admin
   if (!this.members.some(m => m.role === 'admin')) {
-    // If creator is a member, make them admin; else promote the first member
     const idx = Math.max(0, this.members.findIndex(m => m.user?.toString?.() === this.createdBy?.toString?.()));
     this.members[idx >= 0 ? idx : 0].role = 'admin';
   }
@@ -52,7 +45,6 @@ SplitGroupSchema.pre('save', function(next) {
   next();
 });
 
-/** Validators: non-empty members, unique emails inside the group */
 SplitGroupSchema.path('members').validate(function(members) {
   if (!Array.isArray(members) || members.length === 0) return false;
   const emails = new Set();
@@ -64,7 +56,6 @@ SplitGroupSchema.path('members').validate(function(members) {
   return true;
 }, 'Members must be non-empty and have unique emails.');
 
-/** Convenience methods */
 SplitGroupSchema.methods.isMember = function(email) {
   const e = (email || '').toLowerCase().trim();
   return this.members.some(m => m.email === e);
@@ -74,7 +65,6 @@ SplitGroupSchema.methods.isAdmin = function(email) {
   return this.members.some(m => m.email === e && m.role === 'admin');
 };
 
-/** Pretty JSON */
 SplitGroupSchema.set('toJSON', {
   versionKey: false,
   virtuals: true,

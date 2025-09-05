@@ -16,7 +16,7 @@ router.delete('/groups/:groupId/expenses/:expenseId', ctrl.deleteExpense);
 router.post('/groups/:groupId/settlements', ctrl.recordSettlement);
 router.get('/groups/:groupId/settlements', ctrl.listSettlements);
 
-// summary (balances + suggested transfers)
+// summary 
 router.get('/groups/:groupId/summary', ctrl.groupSummary);
 
 module.exports = router;

@@ -1,4 +1,3 @@
-// controllers/splitController.js
 const mongoose = require('mongoose');
 const { isValidObjectId } = mongoose;
 
@@ -6,7 +5,6 @@ const SplitGroup = require('../models/splitGroupModel');
 const SplitExpense = require('../models/splitExpenseModel');
 const SplitSettlement = require('../models/splitSettlementModel');
 
-// ---------- user resolver (NO AUTH) ----------
 async function resolveUser(req) {
   const User = require('../models/userModel');
   const emailFromHeader = (req.header('x-user-email') || '').toLowerCase().trim();
@@ -78,7 +76,7 @@ async function ensureGroupMembers(group, emailsWithNames = []) {
   return group;
 }
 
-// Centralized loader for group + membership check
+
 async function loadGroupOrFail(req, res, user, requireAdmin = false) {
   const { groupId } = req.params;
 
@@ -111,7 +109,6 @@ async function loadGroupOrFail(req, res, user, requireAdmin = false) {
   return group;
 }
 
-// ----------------- Controllers -----------------
 exports.createGroup = async (req, res) => {
   try {
     const user = await resolveUser(req);
@@ -152,7 +149,7 @@ exports.listMyGroups = async (req, res) => {
 exports.addMembers = async (req, res) => {
   try {
     const user = await resolveUser(req);
-    const group = await loadGroupOrFail(req, res, user, /*requireAdmin*/ true);
+    const group = await loadGroupOrFail(req, res, user, true);
     if (!group) return;
 
     const { members = [] } = req.body;

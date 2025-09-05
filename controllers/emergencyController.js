@@ -2,13 +2,12 @@ const bcrypt = require('bcrypt');
 const EmergencyFund = require('../models/emergencyModel');
 const FundTx = require('../models/fundTransactionModel');
 
-// Try to require Expense model if you have one (optional)
 let Expense = null;
-try { Expense = require('../models/Expense'); } catch (_) { /* optional */ }
+try { Expense = require('../models/Expense'); } catch (_) {  }
 
-// ---------- user resolver (NO AUTH) ----------
+
 async function resolveUser(req) {
-  const User = require('../models/userModel'); // your existing user model
+  const User = require('../models/userModel'); 
   const emailFromHeader = (req.header('x-user-email') || '').toLowerCase().trim();
   const email = emailFromHeader || (process.env.DEV_USER_EMAIL || 'dev@example.com').toLowerCase();
 
@@ -18,14 +17,14 @@ async function resolveUser(req) {
       name: 'Dev User',
       username: `dev_${Date.now()}`,
       email,
-      password: 'devpass123',           // hashed by pre-save hook
+      password: 'devpass123',           
       firstLoginVerified: true
     });
   }
   return user;
 }
 
-// ---------- helpers ----------
+// helpers
 function monthDiff(from, to) {
   const ms = to.getTime() - from.getTime();
   return Math.max(1, Math.ceil(ms / (1000 * 60 * 60 * 24 * 30)));
@@ -50,7 +49,7 @@ async function computeAvgEssentialMonthly(userId, months = 3) {
   return total / months || 0;
 }
 
-// ---------- controllers ----------
+// controllers 
 exports.setup = async (req, res) => {
   try {
     const user = await resolveUser(req);

@@ -6,7 +6,7 @@ const GroceryItem = require('../models/groceryItemModel');
 const MealEntry = require('../models/mealEntryModel');
 const ShoppingDuty = require('../models/shoppingDutyModel');
 
-// ============ user resolver (NO AUTH) ============
+//user resolver
 async function resolveUser(req) {
   const User = require('../models/userModel');
   const emailFromHeader = (req.header('x-user-email') || '').toLowerCase().trim();
@@ -25,7 +25,7 @@ async function resolveUser(req) {
   return user;
 }
 
-// ============ helpers ============
+// helpers 
 function normEmail(e) { return (e || '').toLowerCase().trim(); }
 function dayStart(d)   { const x = new Date(d); x.setHours(0,0,0,0); return x; }
 function dayEnd(d)     { const x = new Date(d); x.setHours(23,59,59,999); return x; }
@@ -80,7 +80,7 @@ function settleGreedy(balances) {
   return out;
 }
 
-// ============ Group ============
+// Group
 exports.createGroup = async (req, res) => {
   try {
     const user = await resolveUser(req);
@@ -126,7 +126,7 @@ exports.addMembers = async (req, res) => {
   }
 };
 
-// ============ Grocery Items ============
+// Grocery Items 
 exports.addItem = async (req, res) => {
   try {
     const user = await resolveUser(req);
@@ -184,13 +184,12 @@ exports.purchaseItem = async (req, res) => {
     const total = Number(String(amount ?? '').replace(/,/g, '').trim());
     if (!Number.isFinite(total) || total <= 0) return res.status(400).json({ message: 'Positive amount required' });
 
-    // prefer provided payer; else infer from duty if exists on that day
     let payer = normEmail(paidByEmail);
     const when = purchasedAt ? new Date(purchasedAt) : new Date();
     if (!payer) {
       const duty = await ShoppingDuty.findOne({ group: group._id, date: dayStart(when) });
       if (duty) payer = duty.email;
-      else payer = user.email; // fallback to caller
+      else payer = user.email; 
     }
 
     await ensureMembers(group, [{ email: payer }]);
@@ -209,14 +208,14 @@ exports.purchaseItem = async (req, res) => {
   }
 };
 
-// ============ Shopping Duty ============
+// Shopping Duty 
 exports.assignDuties = async (req, res) => {
   try {
     const user = await resolveUser(req);
     const group = await loadGroupOrFail(req, res, user, true);
     if (!group) return;
 
-    // body can be: { duties: [{date, email}, ...] }
+
     const { duties = [] } = req.body || {};
     if (!Array.isArray(duties) || !duties.length) {
       return res.status(400).json({ message: 'duties array is required' });
@@ -268,14 +267,13 @@ exports.listDuties = async (req, res) => {
   }
 };
 
-// ============ Meal Entries (who ate how much) ============
+// Meal Entries
 exports.recordMeals = async (req, res) => {
   try {
     const user = await resolveUser(req);
     const group = await loadGroupOrFail(req, res, user);
     if (!group) return;
 
-    // body can be: { entries: [{email, date, meal, servings}, ...] }
     const { entries = [] } = req.body || {};
     if (!Array.isArray(entries) || !entries.length) {
       return res.status(400).json({ message: 'entries array is required' });
@@ -321,7 +319,6 @@ exports.listMeals = async (req, res) => {
   }
 };
 
-// ============ Summary (cost per meal & settlements) ============
 exports.summary = async (req, res) => {
   try {
     const user = await resolveUser(req);
@@ -370,7 +367,6 @@ exports.summary = async (req, res) => {
 
     const costPerServing = totalServings > 0 ? Math.round((totalSpend / totalServings) * 100) / 100 : 0;
 
-    // owed = servings * costPerServing, balance = paid - owed
     const balances = {};
     group.members.forEach(m => {
       const email = m.email;
